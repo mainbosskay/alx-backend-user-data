@@ -65,3 +65,25 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
             database=db_name
     )
     return connct
+
+
+def main():
+    """Logging database table that hold user record information"""
+    fieldNames = "name,email,phone,ssn,password,ip,last_login,user_agent"
+    columns = fieldNames.split(",")
+    dbquery = f"SELECT {fieldNames} FROM users;"
+    loggerInfo = get_logger()
+    conct = get_db()
+    with conct.cursor() as cursor:
+        cursor.execute(dbquery)
+        rows = cursor.fetchall()
+        for row in rows:
+            logData = map(lambda k: f"{k[0]}={k[1]}", zip(columns, row))
+            logMssge = f"{'; '.join(list(logData))};"
+            args = ("user_data", logging.INFO, None, None, logMssge, None, None)
+            logrecord = logging.LogRecord(*args)
+            infoLogger.handle(logrecord)
+
+
+if __name__ == "__main__":
+    main()
