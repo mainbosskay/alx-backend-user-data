@@ -3,6 +3,8 @@
 from typing import List
 import re
 import logging
+import os
+import mysql.connector
 
 
 regexPattrn = {
@@ -48,3 +50,18 @@ def get_logger() -> logging.Logger:
     loggerUserData.propagate = False
     loggerUserData.addHandler(streamHandler)
     return loggerUserData
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """Getting and return database connector"""
+    db_user = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
+    db_pword = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
+    db_host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
+    db_name = os.getenv("PERSONAL_DATA_DB_NAME", "")
+    conct = mysql.connector.connection.MySQLConnection(
+            user=db_user,
+            password=db_pword,
+            host=db_host,
+            database=db_name
+    )
+    return connct
