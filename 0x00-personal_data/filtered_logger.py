@@ -37,3 +37,14 @@ class RedactingFormatter(logging.Formatter):
         mssgeRedact = filter_datum(self.fields,  self.REDACTION,
                                    mssgeFmt, self.SEPARATOR)
         return mssgeRedact
+
+
+def get_logger() -> logging.Logger:
+    """Creating and configure user data's logger specifically"""
+    loggerUserData = logging.getLogger("user_data")
+    streamHandler = logging.StreamHandler()
+    streamHandler.setFormatter(RedactingFormatter(PII_FIELDS))
+    loggerUserData.setLevel(logging.INFO)
+    loggerUserData.propagate = False
+    loggerUserData.addHandler(streamHandler)
+    return loggerUserData
