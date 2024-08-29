@@ -5,9 +5,10 @@ import re
 
 
 regexPattrn = {
-        'extract': lambda fld, sep: fr"(?P<field>{'|'.join(fld)})=[^{sep}]",
+        'extract': lambda fld, sep: fr"(?P<field>{'|'.join(fld)})=[^{sep}]*",
         'replace': lambda redact: fr"\g<field>={redact}"
 }
+PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
 
 def filter_datum(fields: List[str], redaction: str,
