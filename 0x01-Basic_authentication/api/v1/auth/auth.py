@@ -20,10 +20,13 @@ class Auth:
                     matchPattrn = f"{excldPath}/*"
                 if re.match(matchPattrn, path):
                     return False
+        return True
 
 
     def authorization_header(self, request=None) -> str:
         """Getting and return auth header from incoming request"""
+        if request is not None:
+            return request.headers.get("Authorization", None)
         return None
 
 
