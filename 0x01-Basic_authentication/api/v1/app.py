@@ -8,6 +8,7 @@ from flask import Flask, jsonify, abort, request
 from flask_cors import (CORS, cross_origin)
 import os
 from api.v1.auth.auth import Auth
+from api.v1.auth.basic_auth import BasicAuth
 
 
 app = Flask(__name__)
@@ -17,6 +18,8 @@ auth = None
 authType = getenv("AUTH_TYPE", "auth")
 if authType == "auth":
     auth = Auth()
+if authType == "basic_auth":
+    auth = BasicAuth()
 
 
 @app.errorhandler(404)

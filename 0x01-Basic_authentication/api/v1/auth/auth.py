@@ -8,7 +8,7 @@ from typing import List, TypeVar
 class Auth:
     """Class for managing authentication operations"""
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
-        """Determines if authentication is requred for a given path"""
+        """Determines if authentication is required for a given path"""
         if path is not None and excluded_paths is not None:
             for excldPath in map(lambda k: k.strip(), excluded_paths):
                 matchPattrn = ""
@@ -22,13 +22,11 @@ class Auth:
                     return False
         return True
 
-
     def authorization_header(self, request=None) -> str:
         """Getting and return auth header from incoming request"""
         if request is not None:
             return request.headers.get("Authorization", None)
         return None
-
 
     def current_user(self, request=None) -> TypeVar('User'):
         """Identifying present user based on the request"""
