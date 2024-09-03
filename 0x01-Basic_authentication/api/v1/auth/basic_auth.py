@@ -39,7 +39,7 @@ class BasicAuth(Auth):
         if type(decoded_base64_authorization_header) == str:
             regexPttrn = r"(?P<user>[^:]+):(?P<password>.+)"
             fldMch = re.fullmatch(regexPttrn,
-                                   decoded_base64_authorization_header.strip())
+                                  decoded_base64_authorization_header.strip())
             if fldMch is not None:
                 usr = fldMch.group("user")
                 pwd = fldMch.group("password")
