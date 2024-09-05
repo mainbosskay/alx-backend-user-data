@@ -30,7 +30,7 @@ class SessionExpAuth(SessionAuth):
     def user_id_for_session_id(self, session_id=None) -> str:
         """Getting user id linked with a given session id & creation time"""
         if session_id in self.user_id_by_session_id:
-            dictSessionict = self.user_id_by_session_id[session_id]
+            dictSession = self.user_id_by_session_id[session_id]
             if self.session_duration <= 0:
                 return dictSession["user_id"]
             if "created_at" not in dictSession:
