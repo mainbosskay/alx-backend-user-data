@@ -57,3 +57,18 @@ class DB:
         if userRecord is None:
             raise NoResultFound()
         return userRecord
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """Modifying user record which is identified by user_id"""
+        userRecord = self.find_user_by(id=user_id)
+        if userRecord is None:
+            return
+        updtSource = {}
+        for key, value in kwargs.items():
+            if hasattr(User, key):
+                updtSource[getattr(User, key)] = value
+            else:
+                raise ValueError()
+        self._session.query(User).filter(User.id == user_id).update(
+                updtSource, synchronize_session=False)
+        self._session.commit()
