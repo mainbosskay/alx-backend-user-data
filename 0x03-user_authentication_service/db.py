@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """DB module
 """
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, tuple_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
 
 from user import Base, User
 
@@ -32,7 +34,26 @@ class DB:
 
     def add_user(self, email: str, hashed_password: str) -> User:
         """Inserting into database a new user record"""
-        userRecord = User(email=email, hashed_password=hashed_password)
-        self._session.add(userRecord)
-        self._session.commit()
+        try:
+            userRecord = User(email=email, hashed_password=hashed_password)
+            self._session.add(userRecord)
+            self._session.commit()
+        except Exception:
+            self._session.rollback()
+            userRecord = None
+        return userRecord
+
+    def find_user_by(self, **kwargs) -> User:
+        """Retriving user matching the specified criteria"""
+        columns, valsFilter = [], []
+        for key, value in kwargs.items():
+            if hasattr(User, key):
+                columns.append(getattr(User, key))
+                valsFilter.append(value)
+            else:
+                raise InvalidRequestError()
+        userRecord = self._session.query(User).filter(
+                tuple_(*columns).in_([tuple(valsFilter)])).first()
+        if userRecord is None:
+            raise NoResultFound()
         return userRecord
